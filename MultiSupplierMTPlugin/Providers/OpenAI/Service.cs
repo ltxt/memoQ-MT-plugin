@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using LLMSupportLang = MultiSupplierMTPlugin.ProvidersCommon.SupportLanguages.LLM;
 
 namespace MultiSupplierMTPlugin.Providers.OpenAI
 {
@@ -77,7 +78,7 @@ namespace MultiSupplierMTPlugin.Providers.OpenAI
 
         public override string ModelsLink { get; set; } = "https://platform.openai.com/docs/models";
 
-        public override Dictionary<string, string> SupportLangDic { get; set; } = SupportLang.Dic;
+        public override Dictionary<string, string> SupportLangDic { get; set; } = LLMSupportLang.Dic;
 
         public override ModelItem[] BuildInModels { get; set; } = new string[]
         {
