@@ -16,20 +16,34 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MemoQ.PreviewInterfaces", "
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug compatible old version|Any CPU = Debug compatible old version|Any CPU
 		Debug|Any CPU = Debug|Any CPU
+		Release compatible old version|Any CPU = Release compatible old version|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77FC0E92-A49B-4650-BE0E-5779B29A3244}.Debug compatible old version|Any CPU.ActiveCfg = Debug compatible old version|Any CPU
+		{77FC0E92-A49B-4650-BE0E-5779B29A3244}.Debug compatible old version|Any CPU.Build.0 = Debug compatible old version|Any CPU
 		{77FC0E92-A49B-4650-BE0E-5779B29A3244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{77FC0E92-A49B-4650-BE0E-5779B29A3244}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77FC0E92-A49B-4650-BE0E-5779B29A3244}.Release compatible old version|Any CPU.ActiveCfg = Release compatible old version|Any CPU
+		{77FC0E92-A49B-4650-BE0E-5779B29A3244}.Release compatible old version|Any CPU.Build.0 = Release compatible old version|Any CPU
 		{77FC0E92-A49B-4650-BE0E-5779B29A3244}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77FC0E92-A49B-4650-BE0E-5779B29A3244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Debug compatible old version|Any CPU.ActiveCfg = Debug compatible old version|Any CPU
+		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Debug compatible old version|Any CPU.Build.0 = Debug compatible old version|Any CPU
 		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Release compatible old version|Any CPU.ActiveCfg = Release compatible old version|Any CPU
+		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Release compatible old version|Any CPU.Build.0 = Release compatible old version|Any CPU
 		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA299618-13A7-4CC8-A997-86C3A77B2094}.Debug compatible old version|Any CPU.ActiveCfg = Debug compatible old version|Any CPU
+		{AA299618-13A7-4CC8-A997-86C3A77B2094}.Debug compatible old version|Any CPU.Build.0 = Debug compatible old version|Any CPU
 		{AA299618-13A7-4CC8-A997-86C3A77B2094}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AA299618-13A7-4CC8-A997-86C3A77B2094}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA299618-13A7-4CC8-A997-86C3A77B2094}.Release compatible old version|Any CPU.ActiveCfg = Release compatible old version|Any CPU
+		{AA299618-13A7-4CC8-A997-86C3A77B2094}.Release compatible old version|Any CPU.Build.0 = Release compatible old version|Any CPU
 		{AA299618-13A7-4CC8-A997-86C3A77B2094}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA299618-13A7-4CC8-A997-86C3A77B2094}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

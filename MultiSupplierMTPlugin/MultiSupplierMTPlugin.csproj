@@ -4,10 +4,19 @@
 		<TargetFrameworks>net48</TargetFrameworks>
         <UseWindowsForms>true</UseWindowsForms>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<AssemblyVersion>1.2.9</AssemblyVersion>
-		<FileVersion>1.2.9</FileVersion>
+		<AssemblyVersion></AssemblyVersion>
+		<FileVersion></FileVersion>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+		<Configurations>Debug;Release;Debug compatible old version;Release compatible old version</Configurations>
 	</PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug compatible old version'">
+        <DefineConstants>$(DefineConstants);COMPATIBLE_OLD_VERSION</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release compatible old version'">
+        <DefineConstants>$(DefineConstants);COMPATIBLE_OLD_VERSION</DefineConstants>
+    </PropertyGroup>
 
 	<ItemGroup>
 	  <Compile Remove="Libs\**" />

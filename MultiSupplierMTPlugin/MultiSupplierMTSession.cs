@@ -12,7 +12,36 @@ using LLK = MultiSupplierMTPlugin.Localized.LocalizedKeyCommon;
 
 namespace MultiSupplierMTPlugin
 {
+#if COMPATIBLE_OLD_VERSION
+    public class MTRequestMetadata
+    {
+        public string PorjectID { get; set; } = String.Empty;
+
+        public string Client { get; set; } = String.Empty;
+
+        public string Domain { get; set; } = String.Empty;
+
+        public string Subject { get; set; } = String.Empty;
+
+        public Guid DocumentID { get; set; } = Guid.Empty;
+
+        public Guid ProjectGuid { get; set; } = Guid.Empty;
+
+        public List<SegmentMetadata> SegmentLevelMetadata { get; set; } = new List<SegmentMetadata>();
+    }
+
+    public class SegmentMetadata
+    {
+        public Guid SegmentID { get; set; } = Guid.Empty;
+
+        public ushort SegmentStatus { get; set; } = 0;
+
+        public int SegmentIndex { get; set; } = 0;
+    }
+    class MultiSupplierMTSession : ISession, ISessionForStoringTranslations
+#else
     class MultiSupplierMTSession : ISessionWithMetadata, ISessionForStoringTranslations
+#endif
     {
         private readonly MultiSupplierMTGeneralSettings _mtGeneralSettings;
         private readonly MultiSupplierMTSecureSettings _mtSecureSettings;
@@ -355,7 +384,11 @@ namespace MultiSupplierMTPlugin
             {
                 if (_mtGeneralSettings.NormalizeWhitespaceAroundTags)
                 {
-                    segment = TagWhitespaceNormalizer.NormalizeWhitespaceAroundTags(originalSegment, segment, this._srcLangCode, this._trgLangCode);
+#if COMPATIBLE_OLD_VERSION
+                    LoggingHelper.Warn("your memoq version is lower than 9.14 and does not support Normalize Whitespace Around Tags");
+#else
+                    segment = TagWhitespaceNormalizer.NormalizeWhitespaceAroundTags(originalSegment, segment, this._srcLangCode, this._trgLangCode);                    
+#endif
                 }
             }
             else

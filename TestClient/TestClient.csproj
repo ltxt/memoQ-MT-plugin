@@ -6,6 +6,7 @@
 		<EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
 		<OutputType>WinExe</OutputType>
 		<UseWindowsForms>true</UseWindowsForms>
+		<Configurations>Debug;Release;Debug compatible old version;Release compatible old version</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
