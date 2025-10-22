@@ -101,7 +101,7 @@ namespace MultiSupplierMTPlugin.Helpers
             return menu;
         }
 
-
+        
         public static (string, string) Parse(
             string systemPrompt, string userPrompt,
 
@@ -133,7 +133,7 @@ namespace MultiSupplierMTPlugin.Helpers
                 var glsDelimiter = cSettings.GlossaryDelimiter;
 
                 string glossary = GlossaryHelper.ReadGlossaryString(plainTexts, glsFilePath, srcLang, tgtLang, glsDelimiter, "utf-8", true) ;
-
+                
                 promptBuilder.SetPlaceholder(_GLOSSARY_TEXT_KEY, glossary);
             }
 
@@ -174,7 +174,8 @@ namespace MultiSupplierMTPlugin.Helpers
             {
                 if (tmSources == null) throw new Exception($"{_TM_SOURCE_TEXT_KEY} Placeholders require memoQ min version 10.0, and enable \"Send best fuzzy TM\" in memoq settings");
 
-                promptBuilder.SetPlaceholder(_TM_SOURCE_TEXT_KEY, tmSources[0]);
+                // TODO: 批量翻译时格式需优化
+                promptBuilder.SetPlaceholder(_TM_SOURCE_TEXT_KEY, bSettings.EnableBathTranslate ? string.Join(Environment.NewLine, tmSources) : tmSources[0]);
             }
 
             // 目标文本（翻译记忆中保存的）
@@ -182,7 +183,8 @@ namespace MultiSupplierMTPlugin.Helpers
             {
                 if (tmTargets == null) throw new Exception($"{_TM_TARGET_TEXT_KEY} Placeholders require memoQ min version 10.0, and enable \"Send best fuzzy TM\" in memoq settings");
 
-                promptBuilder.SetPlaceholder(_TM_TARGET_TEXT_KEY, tmTargets[0]);
+                // TODO: 批量翻译时格式需优化
+                promptBuilder.SetPlaceholder(_TM_TARGET_TEXT_KEY, bSettings.EnableBathTranslate ? string.Join(Environment.NewLine, tmTargets) : tmTargets[0]);
             }
 
             if (promptBuilder.HasPlaceholder(_FULL_TEXT_KEY) || promptBuilder.HasPlaceholder(_SUAMMARY_TEXT_KEY) ||
