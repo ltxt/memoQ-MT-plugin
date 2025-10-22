@@ -38,7 +38,7 @@ namespace MultiSupplierMTPlugin
         #region IModule Members
 
         public bool IsActivated
-        {
+        {   
             get { return true; }
         }
 
@@ -67,7 +67,7 @@ namespace MultiSupplierMTPlugin
             get { return true; }
         }
 
-        public override bool SupportFuzzyForwarding
+        public override bool SupportFuzzyForwarding 
         {
             get { return true; }
         }
@@ -84,7 +84,7 @@ namespace MultiSupplierMTPlugin
 
         public override string FriendlyName
         {
-            get
+            get 
             {
                 if (_mtOptions == null)
                     return $"Multi Supplier MT Plugin\r\n({_dllFileName})";
@@ -106,10 +106,10 @@ namespace MultiSupplierMTPlugin
 
         public override Image DisplayIcon
         {
-            get
+            get 
             {
                 // TODO 根据当前选的提供商，显示不同提供商的图标
-                return Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiSupplierMTPlugin.Icon.png")); ;
+                return Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiSupplierMTPlugin.Icon.png"));
             }
         }
 

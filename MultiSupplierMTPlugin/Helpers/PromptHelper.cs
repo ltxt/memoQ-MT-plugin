@@ -46,6 +46,7 @@ namespace MultiSupplierMTPlugin.Helpers
             _ABOVE_TEXT_KEY, _BELOW_TEXT_KEY
         };
 
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, string lParam);
 
@@ -99,8 +100,6 @@ namespace MultiSupplierMTPlugin.Helpers
 
             return menu;
         }
-
-
 
 
         public static (string, string) Parse(
@@ -224,7 +223,7 @@ namespace MultiSupplierMTPlugin.Helpers
                 // 上文、下文、目标文本 需要界面交互
                 if (promptBuilder.HasPlaceholder(_ABOVE_TEXT_KEY) || promptBuilder.HasPlaceholder(_BELOW_TEXT_KEY) || promptBuilder.HasPlaceholder(_TARGET_TEXT_KEY))
                 {
-                    if (texts.Count > 1) throw new Exception("Batch translation or Pre-translation does not support getting above-text, below-text or target-text");
+                    if (texts.Count > 1) throw new Exception("Batch translation(Pre-translation) does not support getting above-text, below-text or target-text");
 
                     var currentIndex = GetSegmIndex(prjGuid, docGuid, srcLang, tgtLang);
                     //LoggingHelper.Log($"Prompt segmIndex: {currentIndex.IndexStart}, {currentIndex.IndexEnd}");
