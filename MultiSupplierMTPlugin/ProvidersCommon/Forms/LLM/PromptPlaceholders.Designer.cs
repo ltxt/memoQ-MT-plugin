@@ -32,6 +32,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxGlossaryText = new System.Windows.Forms.GroupBox();
+            this.textBoxGlossaryEncoding = new System.Windows.Forms.TextBox();
+            this.labelGlossaryEncoding = new System.Windows.Forms.Label();
             this.textBoxGlossaryDelimiter = new System.Windows.Forms.TextBox();
             this.buttonGlossarySelect = new System.Windows.Forms.Button();
             this.textBoxGlossaryFilePath = new System.Windows.Forms.TextBox();
@@ -67,8 +69,6 @@
             this.labelBelowTextMaxSegments = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.labelGlossaryEncoding = new System.Windows.Forms.Label();
-            this.textBoxGlossaryEncoding = new System.Windows.Forms.TextBox();
             this.groupBoxGlossaryText.SuspendLayout();
             this.groupBoxSummaryText.SuspendLayout();
             this.groupBoxAboveText.SuspendLayout();
@@ -112,12 +112,30 @@
             this.groupBoxGlossaryText.Controls.Add(this.textBoxGlossaryFilePath);
             this.groupBoxGlossaryText.Controls.Add(this.labelGlossaryFilePath);
             this.groupBoxGlossaryText.Controls.Add(this.labelGlossaryDelimiter);
-            this.groupBoxGlossaryText.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxGlossaryText.Location = new System.Drawing.Point(12, 14);
             this.groupBoxGlossaryText.Name = "groupBoxGlossaryText";
             this.groupBoxGlossaryText.Size = new System.Drawing.Size(516, 95);
             this.groupBoxGlossaryText.TabIndex = 0;
             this.groupBoxGlossaryText.TabStop = false;
             this.groupBoxGlossaryText.Text = "{{glossary-text}}";
+            // 
+            // textBoxGlossaryEncoding
+            // 
+            this.textBoxGlossaryEncoding.Location = new System.Drawing.Point(334, 23);
+            this.textBoxGlossaryEncoding.MaxLength = 1;
+            this.textBoxGlossaryEncoding.Name = "textBoxGlossaryEncoding";
+            this.textBoxGlossaryEncoding.ReadOnly = true;
+            this.textBoxGlossaryEncoding.Size = new System.Drawing.Size(84, 25);
+            this.textBoxGlossaryEncoding.TabIndex = 6;
+            // 
+            // labelGlossaryEncoding
+            // 
+            this.labelGlossaryEncoding.AutoSize = true;
+            this.labelGlossaryEncoding.Location = new System.Drawing.Point(240, 28);
+            this.labelGlossaryEncoding.Name = "labelGlossaryEncoding";
+            this.labelGlossaryEncoding.Size = new System.Drawing.Size(71, 15);
+            this.labelGlossaryEncoding.TabIndex = 5;
+            this.labelGlossaryEncoding.Text = "Encoding";
             // 
             // textBoxGlossaryDelimiter
             // 
@@ -176,9 +194,9 @@
             this.groupBoxSummaryText.Controls.Add(this.labelSummaryType);
             this.groupBoxSummaryText.Controls.Add(this.textBoxSummaryPrompt);
             this.groupBoxSummaryText.Controls.Add(this.labelSummaryPrompt);
-            this.groupBoxSummaryText.Location = new System.Drawing.Point(12, 122);
+            this.groupBoxSummaryText.Location = new System.Drawing.Point(12, 128);
             this.groupBoxSummaryText.Name = "groupBoxSummaryText";
-            this.groupBoxSummaryText.Size = new System.Drawing.Size(516, 225);
+            this.groupBoxSummaryText.Size = new System.Drawing.Size(516, 213);
             this.groupBoxSummaryText.TabIndex = 6;
             this.groupBoxSummaryText.TabStop = false;
             this.groupBoxSummaryText.Text = "{{summary-text}}";
@@ -263,7 +281,7 @@
             this.textBoxSummaryPrompt.Location = new System.Drawing.Point(127, 97);
             this.textBoxSummaryPrompt.Multiline = true;
             this.textBoxSummaryPrompt.Name = "textBoxSummaryPrompt";
-            this.textBoxSummaryPrompt.Size = new System.Drawing.Size(372, 111);
+            this.textBoxSummaryPrompt.Size = new System.Drawing.Size(372, 96);
             this.textBoxSummaryPrompt.TabIndex = 12;
             this.textBoxSummaryPrompt.WordWrap = false;
             this.textBoxSummaryPrompt.TextChanged += new System.EventHandler(this.textBoxSummaryPrompt_TextChanged);
@@ -287,7 +305,7 @@
             this.groupBoxAboveText.Controls.Add(this.checkBoxAboveTextIncludeSource);
             this.groupBoxAboveText.Controls.Add(this.labelAboveTextMaxCharacters);
             this.groupBoxAboveText.Controls.Add(this.labelAboveTextMaxSegments);
-            this.groupBoxAboveText.Location = new System.Drawing.Point(12, 366);
+            this.groupBoxAboveText.Location = new System.Drawing.Point(12, 360);
             this.groupBoxAboveText.Name = "groupBoxAboveText";
             this.groupBoxAboveText.Size = new System.Drawing.Size(516, 100);
             this.groupBoxAboveText.TabIndex = 9;
@@ -397,7 +415,7 @@
             this.groupBoxBelowText.Controls.Add(this.checkBoxBelowTextIncludeSource);
             this.groupBoxBelowText.Controls.Add(this.labelBelowTextMaxCharacters);
             this.groupBoxBelowText.Controls.Add(this.labelBelowTextMaxSegments);
-            this.groupBoxBelowText.Location = new System.Drawing.Point(12, 482);
+            this.groupBoxBelowText.Location = new System.Drawing.Point(12, 484);
             this.groupBoxBelowText.Name = "groupBoxBelowText";
             this.groupBoxBelowText.Size = new System.Drawing.Size(516, 100);
             this.groupBoxBelowText.TabIndex = 16;
@@ -502,24 +520,6 @@
             this.toolTip.AutoPopDelay = 5000;
             this.toolTip.InitialDelay = 100;
             this.toolTip.ReshowDelay = 100;
-            // 
-            // labelEncoding
-            // 
-            this.labelGlossaryEncoding.AutoSize = true;
-            this.labelGlossaryEncoding.Location = new System.Drawing.Point(240, 28);
-            this.labelGlossaryEncoding.Name = "labelEncoding";
-            this.labelGlossaryEncoding.Size = new System.Drawing.Size(71, 15);
-            this.labelGlossaryEncoding.TabIndex = 5;
-            this.labelGlossaryEncoding.Text = "Encoding";
-            // 
-            // textBoxEncoding
-            // 
-            this.textBoxGlossaryEncoding.Location = new System.Drawing.Point(334, 23);
-            this.textBoxGlossaryEncoding.MaxLength = 1;
-            this.textBoxGlossaryEncoding.Name = "textBoxEncoding";
-            this.textBoxGlossaryEncoding.ReadOnly = true;
-            this.textBoxGlossaryEncoding.Size = new System.Drawing.Size(84, 25);
-            this.textBoxGlossaryEncoding.TabIndex = 6;
             // 
             // PromptPlaceholders
             // 

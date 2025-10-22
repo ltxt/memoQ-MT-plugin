@@ -148,7 +148,7 @@ namespace MultiSupplierMTPlugin.ProvidersCommon.Forms.LLM
 
         private void textBoxSummaryPrompt_TextChanged(object sender, EventArgs e)
         {
-            textBoxSummaryPrompt.ScrollBars = textBoxSummaryPrompt.Lines.Length > 7 ? ScrollBars.Vertical : ScrollBars.None;
+            textBoxSummaryPrompt.ScrollBars = textBoxSummaryPrompt.Lines.Length > 6 ? ScrollBars.Vertical : ScrollBars.None;
         }
 
         private void linkLabelSummaryCacheDir_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
