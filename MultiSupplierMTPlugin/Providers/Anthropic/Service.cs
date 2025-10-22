@@ -36,11 +36,29 @@ namespace MultiSupplierMTPlugin.Providers.Anthropic
 
         public override bool IsHtmlSupported { get; set; } = true;
 
-        public override bool IsBatchSupported { get; set; } = false;
+        public override bool IsBatchSupported
+        {
+            get { return _generalSettings.EnableBathTranslate; }
 
-        public override int MaxSegments { get; set; } = 1;
+            // 然而，这里并不能保存到配置文件
+            set { _generalSettings.EnableBathTranslate = value; }
+        }
 
-        public override int MaxCharacters { get; set; } = 0;
+        public override int MaxSegments
+        {
+            get { return IsBatchSupported ? _generalSettings.BathTranslateMaxSegments : 1; }
+
+            // 然而，这里并不能保存到配置文件
+            set { _generalSettings.BathTranslateMaxSegments = value; }
+        }
+
+        public override int MaxCharacters
+        {
+            get { return IsBatchSupported ? _generalSettings.BathTranslateMaxCharacters : 0; }
+
+            // 然而，这里并不能保存到配置文件
+            set { _generalSettings.BathTranslateMaxCharacters = value; }
+        }
 
         public override int MaxQueriesPerWindow { get; set; } = 45;
 
