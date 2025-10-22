@@ -28,7 +28,7 @@ namespace MultiSupplierMTPlugin.Providers.MicrosoftBuiltIn
             _httpClient.DefaultRequestHeaders.Add("sec-fetch-dest", "empty");
             _httpClient.DefaultRequestHeaders.Add("sec-fetch-mode", "cors");
             _httpClient.DefaultRequestHeaders.Add("sec-fetch-site", "cross-site");
-            _httpClient.DefaultRequestHeaders.Add("Referer", "https://appsumo.com/");
+            _httpClient.DefaultRequestHeaders.Add("Referer", "https://www.bing.com/");
             _httpClient.DefaultRequestHeaders.Add("Referrer-Policy", "strict-origin-when-cross-origin");
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42");
         }
@@ -94,7 +94,7 @@ namespace MultiSupplierMTPlugin.Providers.MicrosoftBuiltIn
                 .AddHeader("Authorization", "Bearer " + token)
                 .AddQuery("from", SupportLang.Dic[srcLangCode])
                 .AddQuery("to", SupportLang.Dic[trgLangCode])
-                .AddQuery("apiVersion", "3.0")
+                .AddQuery("api-version", "3.0")
                 .AddQuery("includeSentenceLength", "true")
                 .SetBodyJson(translationRequestItems)
                 .ReceiveJson<List<TranslationResponseItem>>(cToken);
