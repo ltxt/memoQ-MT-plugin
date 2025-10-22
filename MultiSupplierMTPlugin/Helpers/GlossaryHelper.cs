@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NReco.Text;
 
 namespace MultiSupplierMTPlugin.Helpers
 {
@@ -15,50 +16,76 @@ namespace MultiSupplierMTPlugin.Helpers
         private const string _SOURCE_LANGUAGE_FIELD = "SourceLanguage";
         private const string _TARGET_LANGUAGE_FIELD = "TargetLanguage";
 
-        private static readonly ConcurrentDictionary<string, string> _stringCache = new ConcurrentDictionary<string, string>();
-        private static readonly ConcurrentDictionary<string, Dictionary<string, string>> _pairsCache = new ConcurrentDictionary<string, Dictionary<string, string>>();
+        private static readonly ConcurrentDictionary<string, AhoCorasickDoubleArrayTrie<KeyValuePair<string, string>>> _automataCache = 
+            new ConcurrentDictionary<string, AhoCorasickDoubleArrayTrie<KeyValuePair<string, string>>>();
 
 
-        public static string ReadGlossary(string path, string srcLang, string tgtLang, string delimiter = ",", string charset = "utf-8", bool enableCache = true)
+        public static string ReadGlossaryString(List<string> plainTexts, string path, string srcLang, string tgtLang, string delimiter = ",", string charset = "utf-8", bool enableCache = true)
         {
-            if (enableCache)
-            {
-                string key = GetKey(path, srcLang, tgtLang, delimiter, charset);
-                if (_stringCache.TryGetValue(key, out string cachedResult))
-                {
-                    LoggingHelper.Info($"Glossary load from memory");
+            var termPairs = ReadGlossaryPairs(plainTexts, path, srcLang, tgtLang, delimiter, charset, enableCache);
 
-                    return cachedResult;
-                }
-            }
-
-            Dictionary<string, string> termPairs = ReadGlossaryPairs(path, srcLang, tgtLang, delimiter, charset, enableCache);
-
-            string finalResult = string.Join(Environment.NewLine, termPairs.Select(termPair => $"{termPair.Key}\t{termPair.Value}"));
-
-            if (enableCache)
-            {
-                string key = GetKey(path, srcLang, tgtLang, delimiter, charset);
-                _stringCache[key] = finalResult;
-            }
-
-            return finalResult;
+            return string.Join(Environment.NewLine, termPairs.Select(termPair => $"{termPair.Key}\t{termPair.Value}"));
         }
 
-        public static Dictionary<string, string> ReadGlossaryPairs(string path, string srcLang, string tgtLang, string delimiter = ",", string charset = "utf-8", bool enableCache = true)
+        public static HashSet<KeyValuePair<string, string>> ReadGlossaryPairs(List<string> plainTexts, string path, string srcLang, string tgtLang, string delimiter = ",", string charset = "utf-8", bool enableCache = true)
         {
+            var result = new HashSet<KeyValuePair<string, string>>();
+
+            var automata = GetOrCreateAutomata(path, srcLang, tgtLang, delimiter, charset, enableCache);
+
+            automata.ParseText(string.Join("", plainTexts), (hit) => result.Add(hit.Value));
+
+            return result;
+        }
+
+
+        private static AhoCorasickDoubleArrayTrie<KeyValuePair<string, string>> GetOrCreateAutomata(string path, string srcLang, string tgtLang, string delimiter = ",", string charset = "utf-8", bool enableCache = true)
+        {
+            string key = GetKey(path, srcLang, tgtLang, delimiter, charset);
+
             if (enableCache)
             {
-                string key = GetKey(path, srcLang, tgtLang, delimiter, charset);
-                if (_pairsCache.TryGetValue(key, out var cachedResult))
+                if (_automataCache.TryGetValue(key, out var cachedAutomata))
                 {
                     LoggingHelper.Info($"Glossary load from memory");
 
-                    return cachedResult;
+                    return cachedAutomata;
                 }
             }
 
-            Dictionary<string, string> result = new Dictionary<string, string>();
+            var termPairs = ReadGlossaryPairsFromFile(path, srcLang, tgtLang, delimiter, charset);
+            LoggingHelper.Info($"Glossary load from disk");
+            
+            var automata = new AhoCorasickDoubleArrayTrie<KeyValuePair<string, string>>(
+                termPairs.Select(tp => new KeyValuePair<string, KeyValuePair<string, string>>(tp.Key, tp)), 
+                true
+            );
+
+            if (enableCache)
+            {
+                _automataCache[key] = automata;
+            }
+
+            return automata;
+        }
+
+        private static string GetKey(string path, string srcLang, string tgtLang, string delimiter, string charset)
+        {
+            string modificationTime;
+            try
+            {
+                modificationTime = File.GetLastWriteTimeUtc(path).ToString("o");
+            }
+            catch
+            {
+                throw new Exception($"glossary file does not exist: {path}");
+            }
+            return $"{path}|{modificationTime}|{srcLang}|{tgtLang}|{delimiter}|{charset}";
+        }
+
+        private static HashSet<KeyValuePair<string, string>> ReadGlossaryPairsFromFile(string path, string srcLang, string tgtLang, string delimiter = ",", string charset = "utf-8")
+        {
+            var result = new HashSet<KeyValuePair<string, string>>();
 
             using (var parser = new CsvTextFieldParser(path, Encoding.GetEncoding(charset)))
             {
@@ -105,7 +132,7 @@ namespace MultiSupplierMTPlugin.Helpers
                     // 第一行当作数据处理
                     if (TryGetTermPair(firstLineFields, fieldIndices, srcLang, tgtLang, out var termPair))
                     {
-                        result[termPair.Key] = termPair.Value;
+                        result.Add(termPair);
                     }
                 }
 
@@ -115,22 +142,13 @@ namespace MultiSupplierMTPlugin.Helpers
                     string[] fields = parser.ReadFields();
                     if (TryGetTermPair(fields, fieldIndices, srcLang, tgtLang, out var termPair))
                     {
-                        result[termPair.Key] = termPair.Value;
+                        result.Add(termPair);
                     }
                 }
             }
 
-            if (enableCache)
-            {
-                string key = GetKey(path, srcLang, tgtLang, delimiter, charset);
-                _pairsCache[key] = result;
-            }
-
-            LoggingHelper.Info($"Glossary load from disk");
-
             return result;
         }
-
 
         private static bool TryGetTermPair(string[] fields, Dictionary<string, int> fieldIndices, string srcLang, string tgtLang, out KeyValuePair<string, string> result)
         {
@@ -163,20 +181,6 @@ namespace MultiSupplierMTPlugin.Helpers
 
             result = default;
             return false;
-        }
-
-        private static string GetKey(string path, string srcLang, string tgtLang, string delimiter, string charset)
-        {
-            string modificationTime;
-            try
-            {
-                modificationTime = File.GetLastWriteTimeUtc(path).ToString("o");
-            }
-            catch
-            {
-                throw new Exception($"glossary file does not exist: {path}");
-            }
-            return $"{path}|{modificationTime}|{srcLang}|{tgtLang}|{delimiter}|{charset}";
         }
     }
 

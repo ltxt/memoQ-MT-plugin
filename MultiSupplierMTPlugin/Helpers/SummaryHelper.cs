@@ -60,7 +60,7 @@ namespace MultiSupplierMTPlugin.Helpers
 
         public static string ReadFromCacheOrGenerate(string projectGuid, string documentGuid, string srcLang, string tgtLang,
             MultiSupplierMTOptions mtOptions, ProviderOptions providerCloneOptions, MultiSupplierMTService service,
-            List<string> texts, List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData)
+            List<string> texts, List<string> plainTexts, List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData)
         {
             if (TryReadFromFile(projectGuid, documentGuid, srcLang, tgtLang, out var summaryInCache))
             {
@@ -88,7 +88,7 @@ namespace MultiSupplierMTPlugin.Helpers
 
                 string summary = Task.Run(async () =>
                 {
-                    return await service.TranslateAsync(texts, srcLang, tgtLang, tmSources, tmTargets, metaData, new CancellationToken(), providerCloneOptions);
+                    return await service.TranslateAsync(texts, plainTexts, srcLang, tgtLang, tmSources, tmTargets, metaData, new CancellationToken(), providerCloneOptions);
                 }).GetAwaiter().GetResult()[0];
 
                 string filePath = GetCacheFilePath(projectGuid, documentGuid, srcLang, tgtLang);

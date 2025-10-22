@@ -56,7 +56,7 @@ namespace MultiSupplierMTPlugin
 
         bool IsLanguagePairSupported(string srcLangCode, string trgLangCode);
 
-        Task<List<string>> TranslateAsync(List<string> texts, string srcLangCode, string trgLangCode, List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData, CancellationToken cToken, ProviderOptions tempOptions = null);
+        Task<List<string>> TranslateAsync(List<string> texts, List<string> plainTexts, string srcLangCode, string trgLangCode, List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData, CancellationToken cToken, ProviderOptions tempOptions = null);
     }
 
     abstract class MultiSupplierMTService<TGeneralSettings, TSecureSettings> : MultiSupplierMTService
@@ -118,7 +118,7 @@ namespace MultiSupplierMTPlugin
 
                 try
                 {
-                    await TranslateAsync(new List<string> { "test" }, "eng", "zho-CN", null, null, null, cts.Token, tempOptions);
+                    await TranslateAsync(new List<string> { "test" }, new List<string> { "test" },"eng", "zho-CN", null, null, null, cts.Token, tempOptions);
                 }
                 catch (OperationCanceledException ex) when (cts.IsCancellationRequested)
                 {
@@ -139,7 +139,7 @@ namespace MultiSupplierMTPlugin
             return SupportLangDic.ContainsKey(srcLangCode) && SupportLangDic.ContainsKey(trgLangCode);
         }
 
-        public abstract Task<List<string>> TranslateAsync(List<string> texts, string srcLangCode, string trgLangCode, List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData, CancellationToken cToken, ProviderOptions tempOptions = null);
+        public abstract Task<List<string>> TranslateAsync(List<string> texts, List<string> plainTexts, string srcLangCode, string trgLangCode, List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData, CancellationToken cToken, ProviderOptions tempOptions = null);
 
         protected (TGeneralSettings g, TSecureSettings s) ResolveOptions(ProviderOptions tempOptions)
         {
@@ -235,7 +235,7 @@ namespace MultiSupplierMTPlugin
 
 
         public override async Task<List<string>> TranslateAsync(
-            List<string> texts, string srcLang, string tgtLang,
+            List<string> texts, List<string> plainTexts, string srcLang, string tgtLang,
             List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData,
             CancellationToken cToken, ProviderOptions tempOptions = null)
         {
@@ -269,7 +269,7 @@ namespace MultiSupplierMTPlugin
             (systemPrompt, userPrompt) = PromptHelper.Parse(
                 systemPrompt, userPrompt,
                 _mtOptions, _options, SupportLangDic, this,
-                texts, srcLang, tgtLang, tmSources, tmTargets, metaData
+                texts, plainTexts, srcLang, tgtLang, tmSources, tmTargets, metaData
                 );
 
             // 5.日志记录最终解析后的提示词

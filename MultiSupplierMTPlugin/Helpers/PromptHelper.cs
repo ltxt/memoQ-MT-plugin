@@ -95,7 +95,7 @@ namespace MultiSupplierMTPlugin.Helpers
             Insert(LLH.G(LLKC.TextBoxPromptMenu_SuammaryText), Build(_SUAMMARY_TEXT_KEY, true));
             Insert(LLH.G(LLKC.TextBoxPromptMenu_FullText), Build(_FULL_TEXT_KEY, true));
             AddSeparator();
-            Insert(LLH.G(LLKC.TextBoxPromptMenu_GlossaryText), Build(_GLOSSARY_TEXT_KEY, true));
+            Insert(LLH.G(LLKC.TextBoxPromptMenu_GlossaryText), Build(_GLOSSARY_TEXT_KEY, false));
 
             return menu;
         }
@@ -112,7 +112,7 @@ namespace MultiSupplierMTPlugin.Helpers
             Dictionary<string, string> supportLanguages,
             MultiSupplierMTService service,
 
-            List<string> texts,
+            List<string> texts, List<string> plainTexts,
             string srcLang, string tgtLang,
             List<string> tmSources, List<string> tmTargets,
             MTRequestMetadata metaData
@@ -133,7 +133,7 @@ namespace MultiSupplierMTPlugin.Helpers
                 var glsFilePath = cSettings.GlossaryFilePath;
                 var glsDelimiter = cSettings.GlossaryDelimiter;
 
-                string glossary = GlossaryHelper.ReadGlossary(glsFilePath, srcLang, tgtLang, glsDelimiter, "utf-8", true);
+                string glossary = GlossaryHelper.ReadGlossaryString(plainTexts, glsFilePath, srcLang, tgtLang, glsDelimiter, "utf-8", true) ;
 
                 promptBuilder.SetPlaceholder(_GLOSSARY_TEXT_KEY, glossary);
             }
@@ -211,7 +211,7 @@ namespace MultiSupplierMTPlugin.Helpers
                     if (cSettings.SummaryAutoGenerate)
                     {
                         summary = SummaryHelper.ReadFromCacheOrGenerate(prjGuid, docGuid, srcLang, tgtLang,
-                                mtOptions, providerOptions, service, texts, tmSources, tmTargets, metaData);
+                                mtOptions, providerOptions, service, texts, plainTexts, tmSources, tmTargets, metaData);
                     }
                     else
                     {

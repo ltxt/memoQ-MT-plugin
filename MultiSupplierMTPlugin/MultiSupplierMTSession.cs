@@ -65,9 +65,11 @@ namespace MultiSupplierMTPlugin
             var hasTm = tmSrcSegms != null && tmTgtSegms != null;
 
             //记录未翻译文本在原始列表中的位置，翻译后才能将结果放入原始位置
-            var untransOriginalIndices = new List<int>();
+            var untransOriginalIndices = new List<int>();  
+            
+            var untransSrcTexts = new List<string>();                  //未翻译的句段文本列表（可能包含标记或标签）
+            var untransSrcPlainTexts = new List<string>();             //未翻译的句段纯文本列表（不包含标记或标签，用于术语查找）
 
-            var untransSrcTexts = new List<string>();                  //未翻译的句段纯文本列表
             var untransTmSrcTexts = hasTm ? new List<string>() : null; //未翻译句段关联的翻译记忆原文纯文本列表
             var untransTmTgtTexts = hasTm ? new List<string>() : null; //未翻译句段关联的翻译记忆译文纯文本列表
 
@@ -75,12 +77,12 @@ namespace MultiSupplierMTPlugin
             TranslationResult[] results = new TranslationResult[srcSegms.Length];
 
             //将句段分成两部分（同时转换成纯文本）：缓存中存在的转换到结果列表，缓存中未存在的转换到未翻译列表
-            DivideCachedAndUncached(srcSegms, tmSrcSegms, tmTgtSegms, untransSrcTexts, untransTmSrcTexts, untransTmTgtTexts, untransOriginalIndices, results);
+            DivideCachedAndUncached(srcSegms, tmSrcSegms, tmTgtSegms, untransSrcTexts, untransSrcPlainTexts, untransTmSrcTexts, untransTmTgtTexts, untransOriginalIndices, results);
 
             //翻译缓存中未存在的
             if (untransSrcTexts.Count > 0)
             {
-                ProcessUncachedTranslations(srcSegms, untransSrcTexts, untransTmSrcTexts, untransTmTgtTexts, metaData, untransOriginalIndices, results);
+                ProcessUncachedTranslations(srcSegms, untransSrcTexts, untransSrcPlainTexts, untransTmSrcTexts, untransTmTgtTexts, metaData, untransOriginalIndices, results);
             }
 
             return results;
@@ -93,7 +95,8 @@ namespace MultiSupplierMTPlugin
         // 将句段分成两部分（同时转换成纯文本）：缓存中存在的转换到结果列表，缓存中未存在的转换到未翻译列表
         private void DivideCachedAndUncached(
             Segment[] srcSegms, Segment[] tmSrcSegms, Segment[] tmTgtSegms,
-            List<string> untransSrcTexts, List<string> untransTmSrcTexts, List<string> untransTmTgtTexts,
+            List<string> untransSrcTexts, List<string> untransSrcPlainTexts,
+            List<string> untransTmSrcTexts, List<string> untransTmTgtTexts,
             List<int> untransOriginalIndices, TranslationResult[] results)
         {
             bool hasTm = tmSrcSegms != null && tmTgtSegms != null;
@@ -112,6 +115,8 @@ namespace MultiSupplierMTPlugin
                     untransOriginalIndices.Add(i);
 
                     untransSrcTexts.Add(srcTexts[i]);
+                    untransSrcPlainTexts.Add(srcSegms[i].PlainText);
+                    
                     if (hasTm)
                     {
                         untransTmSrcTexts?.Add(tmSrcSegms[i] != null ? ConvertSegment2String(tmSrcSegms[i]) : "");
@@ -124,7 +129,8 @@ namespace MultiSupplierMTPlugin
         // 主翻译逻辑
         private void ProcessUncachedTranslations(
             Segment[] srcSegms,
-            List<string> untransSrcTexts, List<string> untransTmSrcTexts, List<string> untransTmTgtTexts, MTRequestMetadata metaData,
+            List<string> untransSrcTexts, List<string> untransSrcPlainTexts,
+            List<string> untransTmSrcTexts, List<string> untransTmTgtTexts, MTRequestMetadata metaData,
             List<int> untransOriginalIndices, TranslationResult[] results)
         {
             var tasks = new List<Task>();
@@ -133,6 +139,7 @@ namespace MultiSupplierMTPlugin
             foreach (var (startIndex, count) in batches)
             {
                 var batchSrcTexts = untransSrcTexts.Skip(startIndex).Take(count).ToList();
+                var batchSrcPlainTexts = untransSrcPlainTexts.Skip(startIndex).Take(count).ToList();
                 var batchTmSrcTexts = untransTmSrcTexts?.Skip(startIndex).Take(count).ToList();
                 var batchTmTgtTexts = untransTmTgtTexts?.Skip(startIndex).Take(count).ToList();
 
@@ -140,8 +147,8 @@ namespace MultiSupplierMTPlugin
                 {
                     try
                     {
-                        var batchTgtTexts = await TranslateCoreAsync(batchSrcTexts, batchTmSrcTexts, batchTmTgtTexts, metaData);
-
+                        var batchTgtTexts = await TranslateCoreAsync(batchSrcTexts, batchSrcPlainTexts, batchTmSrcTexts, batchTmTgtTexts, metaData);
+                        
                         for (int i = 0; i < batchSrcTexts.Count; i++)
                         {
                             int untransIndex = startIndex + i;                        // 在未翻译列表中的索引
@@ -232,7 +239,7 @@ namespace MultiSupplierMTPlugin
         }
 
         // 并发限制、速率限制、重试限制
-        private async Task<List<string>> TranslateCoreAsync(List<string> batchTexts, List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData)
+        private async Task<List<string>> TranslateCoreAsync(List<string> batchTexts, List<string> batchPlainTexts, List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData)
         {
             // 重试限制放在外部缺点：请求还没真正发起，就可能会超时失败
             // 重试限制放在内部缺点：失败重试时，并发限制、速率限制不再起作用
@@ -254,7 +261,7 @@ namespace MultiSupplierMTPlugin
                     List<string> result;
                     try
                     {
-                        result = await _providerService.TranslateAsync(batchTexts, _srcLangCode, _trgLangCode, tmSources, tmTargets, metaData, cToken);
+                        result = await _providerService.TranslateAsync(batchTexts, batchPlainTexts, _srcLangCode, _trgLangCode, tmSources, tmTargets, metaData, cToken);
                     }
                     catch (Exception ex)
                     {

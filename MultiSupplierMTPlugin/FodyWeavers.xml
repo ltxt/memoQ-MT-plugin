@@ -3,6 +3,7 @@
 		<!-- 选择性嵌入 -->
 		<IncludeAssemblies>
 			LiteDB
+			NReco.Text.AhoCorasickDoubleArrayTrie
 		</IncludeAssemblies>
 
 		<!-- 优化非托管DLL -->
