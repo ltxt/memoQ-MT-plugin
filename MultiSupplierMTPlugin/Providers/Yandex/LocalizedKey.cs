@@ -1,4 +1,5 @@
 ﻿using MultiSupplierMTPlugin.Localized;
+using MultiSupplierMTPlugin.ProvidersCommon.Forms.LLM;
 
 namespace MultiSupplierMTPlugin.Providers.Yandex
 {
@@ -26,8 +27,8 @@ namespace MultiSupplierMTPlugin.Providers.Yandex
         [LocalizedValue("cf1053a3-dcdf-426e-b8df-4bdf98f666ef", "Folder Id", "Folder Id")]
         public static LocalizedKey LabelFolderId { get; private set; }
 
-        [LocalizedValue("bbd35cda-f93a-491e-8f01-d2473616c154", "Tyep", "类型")]
-        public static LocalizedKey LabelTyep { get; private set; }
+        [LocalizedValue("bbd35cda-f93a-491e-8f01-d2473616c154", "Type", "类型")]
+        public static LocalizedKey LabelType { get; private set; }
 
         [LocalizedValue("18298182-3522-42c8-a43a-457c749c9e23", "API Key", "API Key")]
         public static LocalizedKey RadioButtonApiKey { get; private set; }
@@ -49,6 +50,9 @@ namespace MultiSupplierMTPlugin.Providers.Yandex
 
         [LocalizedValue("73fbd4ff-b4f9-4b3a-ae6a-b3f1ffe778e1", "Delimiter", "分隔符")]
         public static LocalizedKey LabelGlossaryDelimiter { get; private set; }
+
+        [LocalizedValue("ffd51a01-cbf3-4c51-8331-cfd28c5dad7f", "Encoding", "文件编码")]
+        public static LocalizedKey LabelGlossaryEncoding { get; private set; }
 
         [LocalizedValue("24c60832-fa49-4bc9-b33b-737ee86f94ab", "File Path", "文件路径")]
         public static LocalizedKey LabelGlossaryFilePath { get; private set; }

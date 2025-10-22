@@ -50,7 +50,7 @@ namespace MultiSupplierMTPlugin.Providers.Yandex
             Text = LLH.G(LLK.Form);
 
             groupBoxAuthorization.Text = LLH.G(LLK.GroupBoxAuthorization);
-            labelTyep.Text = LLH.G(LLK.LabelTyep);
+            labelTyep.Text = LLH.G(LLK.LabelType);
             radioButtonApiKey.Text = LLH.G(LLK.RadioButtonApiKey);
             radioButtonIamToken.Text = LLH.G(LLK.RadioButtonIamToken);
             linkLabelKeyOrToken.Text = LLH.G(LLK.LinkLabelKeyOrToken);
