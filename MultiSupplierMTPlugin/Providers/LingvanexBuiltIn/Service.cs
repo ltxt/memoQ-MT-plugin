@@ -101,7 +101,7 @@ namespace MultiSupplierMTPlugin.Providers.LingvanexBuiltIn
 
             var transResponse = JObject.Parse(jsonResponse);
 
-            if (transResponse.ContainsKey("result"))
+            if (transResponse["result"] != null)
             {
                 result[0] = transResponse["result"].ToString();
             }
