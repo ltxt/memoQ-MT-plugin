@@ -32,7 +32,7 @@ namespace MultiSupplierMTPlugin.Providers.Caiyun
 
         public override bool IsBatchSupported { get; set; } = true;
 
-        public override int MaxSegments { get; set; } = 10;
+        public override int MaxSegments { get; set; } = 0;
 
         public override int MaxCharacters { get; set; } = 3000;
 

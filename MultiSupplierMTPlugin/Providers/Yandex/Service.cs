@@ -32,9 +32,9 @@ namespace MultiSupplierMTPlugin.Providers.Yandex
 
         public override bool IsBatchSupported { get; set; } = true;
 
-        public override int MaxSegments { get; set; } = 10;
+        public override int MaxSegments { get; set; } = 0;
 
-        public override int MaxCharacters { get; set; } = 0;
+        public override int MaxCharacters { get; set; } = 3000;
 
         public override int MaxQueriesPerWindow { get; set; } = 18;
 
@@ -92,7 +92,7 @@ namespace MultiSupplierMTPlugin.Providers.Yandex
             if (!string.IsNullOrEmpty(g.GlossaryFilePath))
             {
                 var glossaryPairs = GlossaryHelper.ReadGlossaryPairs(plainTexts, g.GlossaryFilePath, srcLangCode, trgLangCode, g.GlossaryDelimiter);
-
+                
                 transRequest.GlossaryConfig = new GlossaryConfig()
                 {
                     GlossaryData = new GlossaryData()

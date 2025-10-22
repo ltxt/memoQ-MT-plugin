@@ -21,7 +21,7 @@
         public virtual string BathTranslateUserPrompt { get; set; } = string.Empty;
 
         public virtual bool EnableBathTranslate { get; set; } = false;
-        public virtual int BathTranslateMaxSegments { get; set; } = 10;
+        public virtual int BathTranslateMaxSegments { get; set; } = 0;
         public virtual int BathTranslateMaxCharacters { get; set; } = 3000;
         public virtual BathTranslateSchema BathTranslateSchema { get; set; } = BathTranslateSchema.Shorter;
         public virtual BathTranslateResponseFormat BathTranslateResponseFormat { get; set; } = BathTranslateResponseFormat.JSON_Object;
