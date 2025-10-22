@@ -145,12 +145,7 @@ namespace MultiSupplierMTPlugin.Providers.OpenAI
             return modelResponse.Data.Select(m => m.Id).OrderBy(i => i, new NaturalSortComparer()).ToList();
         }
 
-        protected override async Task<string> TranslateAsync(
-            GeneralSettings g, SecureSettings s,
-            string systemPrompt, string userPrompt,
-            List<string> texts, string srcLang, string tgtLang,
-            List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData,
-            CancellationToken cToken)
+        protected override async Task<string> TranslateAsync(GeneralSettings g, SecureSettings s, string systemPrompt, string userPrompt, CancellationToken cToken)
         {
             var localizedName = ServiceLocalizedNameHelper.Get(UniqueName);
 

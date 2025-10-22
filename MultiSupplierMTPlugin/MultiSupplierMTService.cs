@@ -225,14 +225,7 @@ namespace MultiSupplierMTPlugin
             }
         }
 
-
-        protected abstract Task<string> TranslateAsync(
-            TGeneralSettings g, TSecureSettings s,
-            string systemPrompt, string userPrompt,
-            List<string> texts, string srcLang, string tgtLang,
-            List<string> tmSources, List<string> tmTargets, MTRequestMetadata metaData,
-            CancellationToken cToken);
-
+        protected abstract Task<string> TranslateAsync(TGeneralSettings g, TSecureSettings s, string systemPrompt, string userPrompt, CancellationToken cToken);
 
         public override async Task<List<string>> TranslateAsync(
             List<string> texts, List<string> plainTexts, string srcLang, string tgtLang,
@@ -276,7 +269,7 @@ namespace MultiSupplierMTPlugin
             LoggingHelper.Info($"{localizedName} Request\r\n[System Prompt: ]\r\n{systemPrompt}\r\n[User Prompt: ]\r\n{userPrompt}");
 
             // 子类实现
-            var content = await TranslateAsync(g, s, systemPrompt, userPrompt, texts, srcLang, tgtLang, tmSources, tmTargets, metaData, cToken);
+            var content = await TranslateAsync(g, s, systemPrompt, userPrompt, cToken);
 
             // 14.是否批量翻译，以及批量翻译时的结果解析
             var result = g.EnableBathTranslate
