@@ -22,8 +22,6 @@ namespace MultiSupplierMTPlugin.Localized
      **/
     class LocalizedHelper
     {
-        private static string _mainAssemblyName = "MultiSupplierMTPlugin";
-
         private static readonly ResourceManager _resourceManager;
 
         private static readonly Dictionary<string, string> _resourceCache;
@@ -35,28 +33,7 @@ namespace MultiSupplierMTPlugin.Localized
         {
             _resourceCache = new Dictionary<string, string>();
             _attributeCache = new Dictionary<LocalizedKeyBase, LocalizedValueAttribute>();
-
-            Assembly assembly;
-            try
-            {
-                // 优先加载共用的主 dll
-                var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var file = $"{_mainAssemblyName}.dll";
-                var mianAssemblyPath = Path.Combine(dir, file);
-                assembly = Assembly.LoadFrom(mianAssemblyPath);
-            }
-            catch (FileNotFoundException)
-            {
-                // 不存在再加载自身 dll
-                assembly = Assembly.GetExecutingAssembly();
-            }
-            catch (Exception)
-            {
-                assembly = Assembly.GetExecutingAssembly();
-            }
-
-            // resourceManager.GetString 当 key 不存在时抛出异常，导致在 debug 下性能非常缓慢，所以将其一次性缓存起来
-            _resourceManager = new ResourceManager($"{_mainAssemblyName}.Languages.Lang", assembly);
+            _resourceManager = new ResourceManager("MultiSupplierMTPlugin.Languages.Lang", typeof(LocalizedHelper).Assembly);
         }
 
 
@@ -86,6 +63,7 @@ namespace MultiSupplierMTPlugin.Localized
 
             try
             {
+                // resourceManager.GetString 当 key 不存在时抛出异常，导致在 debug 下性能非常缓慢，所以将其一次性缓存起来
                 var resourceSet = _resourceManager.GetResourceSet(culture, true, true);
                 foreach (DictionaryEntry entry in resourceSet)
                 {
@@ -103,33 +81,7 @@ namespace MultiSupplierMTPlugin.Localized
 
         public static string[] GetAvailableLanguages()
         {
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-
-            var directories = Directory.GetDirectories(baseDir);
-
-            var availableLanguages = new HashSet<string>() { "en-US", "zh-CN" };
-
-            foreach (var dir in directories)
-            {
-                var cultureName = Path.GetFileName(dir);
-                var expectedDll = Path.Combine(dir, $"{_mainAssemblyName}.resources.dll");
-
-                if (File.Exists(expectedDll))
-                {
-                    try
-                    {
-                        // 验证是合法 CultureInfo
-                        var _ = new CultureInfo(cultureName);
-                        availableLanguages.Add(cultureName);
-                    }
-                    catch
-                    {
-                        // 忽略非法文化目录
-                    }
-                }
-            }
-
-            return availableLanguages.ToArray();
+            return new string[] { "en-US", "zh-CN" };
         }
 
         public static string G(LocalizedKeyBase key, params object[] slots)

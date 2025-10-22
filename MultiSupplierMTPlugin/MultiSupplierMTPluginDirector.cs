@@ -21,8 +21,18 @@ namespace MultiSupplierMTPlugin
 
         public MultiSupplierMTPluginDirector()
         {
-            string nameAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-            _dllFileName = nameAssembly;
+            try
+            {
+                // 由于 Shadow Copy，必须使用文件名，而不是 Assembly 的名字，否则多重安装出错
+                _dllFileName = Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
+            }
+            catch
+            {
+            }
+
+            // 兼容 memoQ Server，但可能导致无法多重安装
+            if (string.IsNullOrEmpty(_dllFileName))
+                _dllFileName = Assembly.GetExecutingAssembly().GetName().Name;
         }
 
         #region IModule Members
