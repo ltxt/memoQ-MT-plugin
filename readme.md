@@ -1,8 +1,8 @@
 
 
-[中文](https://github.com/JuchiaLu/Multi-Supplier-MT-Plugin/blob/main/readme.md) [English (MT)](https://github.com/JuchiaLu/Multi-Supplier-MT-Plugin/blob/main/readme-eng.md)
+[中文](https://github.com/JuchiaLu/Multi-Supplier-MT-Plugin/blob/main/readme.md) [English ](https://github.com/JuchiaLu/Multi-Supplier-MT-Plugin/blob/main/readme-eng.md)
 
-##  为什么写这款插件
+##  1. 为什么写这款插件
 
 最近想要翻译一些技术文档，由于一些专业术语需要确保一致性，所以接触到了 CAT（计算机辅助翻译）软件，最终选择了 memoQ，~~它有一款 PDF 外部预览插件，可以实时预览待翻译句段在 PDF 原文中的位置，这是我选择它的一个重要理由~~（使用一段时间后，发现它并不能完全满足我的需求，我又为 memoQ 开发了[ Word 外部预览插件）](https://github.com/JuchiaLu/Memoq-Word-Preview)。
 
@@ -10,13 +10,13 @@
 
 插件仅在 memoQ 9.14 和 11.4 版本中进行测试，其他版本如出现问题，请进行反馈。 由于 memoQ 上手有一定难度，因此特别写了一篇最佳实践的[图文教程](https://github.com/JuchiaLu/Multi-Supplier-MT-Plugin/blob/main/doc/BestPractice.md)。
 
-##  翻译插件功能预览
+##  2. 翻译插件功能预览
 
 ![](https://raw.githubusercontent.com/JuchiaLu/Multi-Supplier-MT-Plugin/master/images/preview.png)
 
 ---
 
-✔ 多服务提供商（上百家）、多重安装、多语言界面
+✔ 多服务提供商（上百家）、多重安装（将插件安装多次）、多语言界面
 
 ✔ 服务提供商管理：自定义添加 OpenAI 兼容提供商、启用或禁用提供商
 
@@ -66,29 +66,31 @@
 
 ---
 
-## 如何安装翻译插件
+## 3. 如何安装翻译插件
 
 ![](https://raw.githubusercontent.com/JuchiaLu/Multi-Supplier-MT-Plugin/master/images/installed.png)
 
-将 Release 中的 `MultiSupplierMTPlugin.dll` 放入到 memoQ 插件目录下（比如 `C:\Program Files\memoQ\memoQ-9\Addins`） 。
+将 Release 中的 `MultiSupplierMTPlugin.dll` 放入到 memoQ 插件目录下：
 
-`en-US`、`zh-CN` 等文件夹为多语言资源文件夹，需要什么语言就一并复制到 memoQ 插件目录下（中英双语，新版插件已内置，可以不用再复制）。
+- 对于 memoQ，目录为 `C:\Program Files\memoQ\memoQ-{版本号}\Addins`。
+- 对于 memoQ Server，目录为 `C:\Program Files\Kilgray\MemoQ Server\Addins`。
 
-插件未经过签名，每次启动 memoQ 都会询问是否加载，如果不想每次询问，需要将 `ClientDevConfig.xml` 放入到 `%programdata%\MemoQ` 目录下。
+插件未经过签名，每次启动 memoQ 都会询问是否加载，如果不想每次询问：
 
-## 如何进行多重安装
+- 对于 memoQ，将 `ClientDevConfig.xml` 放入到 `%programdata%\MemoQ` 目录下。
+- 对于 memoQ Server，将 `UserApprovedUnsignedMTplugins.xml` 放入到 `%programdata%\MemoQ Server` 目录下。
+
+## 4. 如何进行多重安装
 
 ![](https://raw.githubusercontent.com/JuchiaLu/Multi-Supplier-MT-Plugin/master/images/multi%20install%202.png)
 
 使用 Release 中的 `Dll Generator.exe` 生成所需数量的 dll 文件，将其一同和 `MultiSupplierMTPlugin.dll` 放入到插件目录下。
 
-确保有一个 dll 的文件名为 `MultiSupplierMTPlugin.dll`，因为其他 dll 要共用 `MultiSupplierMTPlugin.dll` 的多语言资源文件。
-
 虽然可以重命名 dll 为任何名字，但不建议这么做，因为下一个版本发布时，又得手动重命名为原来的名字才能关联到已保存的配置。
 
 请一定要使用 `Dll Generator.exe` 生成 dll，而不是直接复制后重命名，否则多重安装将会产生错误，除非等到 [这个](https://github.com/dotnet/aspnetcore/issues/47465) 问题得到解决。
 
-## 标签请求类型解释
+## 5. 标签请求类型解释
 
 ![](https://raw.githubusercontent.com/JuchiaLu/Multi-Supplier-MT-Plugin/master/images/formattings%20and%20tags.png)
 
@@ -100,30 +102,23 @@
 
 为了翻译后的排版效果和原文保持一致，要求翻译时将格式标记（比如加粗、斜体、下划线，上标、下标等）和标签（比如字体颜色、背景颜色、链接等）放置到适当的位置。格式标记或标签有两种形式表示，一是使用 Xml 标准表示，二是使用 Html 标准表示，各家支持的情况请看提供商表格中的“支持 Xml 或 Html”。
 
-## 自定义请求限制设置
+## 6. 自定义请求限制设置
 
-- 如果服务提供商不支持批量翻译，插件强制它每个请求只翻译 1 个句段，然后不再限制它的每个请求字符数。
-- 如果服务提供商可支持批量翻译，插件默认限制每个请求最多 10 个句段，默认限制每个请求最多 3000 字符。
-- 如果 QPS 不详，插件默认速率限制设置为每秒 5 个请求，默认并发限制也设置为最多 5 个请求正在同时执行。
+- 如果服务提供商支持批量翻译，插件默认限制每个请求最多 3000 字符，然后不再限制每个请求的句段数。
+- 如果服务提供商不支持批量翻译，插件强制每个请求只会翻译 1 个句段，然后不再限制每个请求的字符数。
 - 如果 QPS 已知，插件默认速率限制设置为已知 QPS 的 90%，插件的默认并发限制设置为等于已知的 QPS 值。
+- 如果 QPS 不详，插件默认速率限制设置为每秒 5 个请求，默认并发限制也设置为最多 5 个请求正在同时执行。
 - 所有服务提供商的默认超时失败时间、重试等待时间、重试最大次数的值都为 0，也就是默认不进行重试操作。
-- 当自定义请求限制时：大小限制、速率限制、并发限制设置为 0 代表不限制，重试限制设置为 0 则代表不重试。
 
+用户可自定义请求限制，当大小、速率、并发限制设置为 0 时代表不限制，重试限制设置为 0 时则代表不重试。执行预翻译（批量翻译）时，最大句段数还受到 memoQ 的限制，默认值为最多 10 个句段，可修改 `C:\Program Files\memoQ\memoQ-{版本号}\MemoQ.exe.config` 中的 `BatchSize` 值来改变它。
 
-
-注：
-
-当执行预翻译（批量翻译）时，最大句段数还受到 memoQ 的限制，默认值为最多 10 个句段，
-
-可修改 `C:\Program Files\memoQ\memoQ-9\MemoQ.exe.config` 中的 `BatchSize` 值来改变它。
-
-## 大语言模型提示词缓存
+## 7. 大语言模型提示词缓存
 
 主流大语言模型提供商都已支持[提示词缓存](https://api-docs.deepseek.com/zh-cn/news/news0802)功能，使用该功能将降低服务延迟和费用。
 
 
 
-各提供商对提示词缓存输入 Token 长度有要求，且缓存的写入或读取的价格、失效时间也有差别：
+使用缓存功能时，各提供商对输入 Token 长度有不同要求，且缓存的写入或读取的价格和失效时间也有差别：
 
 | 提供商                                                       | Token 最低输入长度 | 写入价格倍率 | 读取价格倍率 | 缓存失效时间   |
 | ------------------------------------------------------------ | ------------------ | ------------ | ------------ | -------------- |
@@ -134,7 +129,7 @@
 
 
 
-以 Anthropic Claude 为例，假设提示词长度为 1 万 Token ：
+以 Anthropic Claude 为例，假设提示词长度每次都固定为 1 万 Token：
 
 - 第一次请求，执行写入缓存操作，消耗 1 \* 1.25 = 1.25 万的输入 Token
 - 之后的每次请求，执行读取缓存操作，消耗 1 \* 0.1 = 0.1 万的输入 Token
@@ -142,11 +137,11 @@
 
 
 
-每次请求时，提示词**不变的前缀**（从系统提示词第一个字符到用户提示词第一个变化字符的前一个字符）才能从缓存中读取。
+每次请求时，只有提示词**不变的前缀**（系统、用户提示词先拼接在一起，拼接后的首个字符到首个变化字符间的字符）能缓存。
 
-所以应该优先将值不会动态改变的占位符（比如 `{{glossary-text}}`、`{{summary-text}}` 等）放置到提示词的靠前位置。
+所以应将每次请求时值都不会动态改变的占位符（比如 `{{summary-text}}`、`{{full-text}}` 等）放置到提示词的靠前位置。
 
-而每次请求时值都会动态改变的占位符（比如 `{{source-text}}`、`{{target-text}}` 等），应该放置到提示词的靠后位置。
+而每次请求时值都会动态改变的占位符（比如 `{{glossary-text}}`、`{{source-text}}` 等），应该放置到提示词的靠后位置。
 
 
 
@@ -156,87 +151,91 @@
 
 你可以启用插件日志，然后从中查看 Token 的使用情况（包含提示词缓存的写入和读取信息），并及时调整提示词，以防提示词缓存失效。
 
-## 大语言模型提示词占位符
+## 8. 大语言模型提示词占位符
 
-“System Prompt”或“User Prompt”中可以使用以下占位符（提供右键菜单快捷插入），它们最终将被实际内容替代：
-
----
-
-- `{{source-language}}`：源语言（限制：无）
-
-- `{{target-language}}`：目标语言（限制：无）
+“System Prompt” 或 “User Prompt” 中可以使用以下占位符（提供右键菜单快捷插入），它们最终将被实际内容替代：
 
 ---
 
-- `{{source-text}}`：源文本（待翻译文本）（限制：无）
-- `{{target-text}}`：目标文本（已翻译文本） （限制：需 memoQ 9.14+ 、需同意启用预览助手、无法在预翻译中使用）
+- `{{source-language}}`：源语言
+- `{{target-language}}`：目标语言
+
+限制：无
 
 ---
 
-- `{{tm-source-text}}`：和待翻译文本最佳匹配的翻译记忆源文本（限制：需 memoQ 10.0+ 、需开启“Send best fuzzy TM”选项）
-- `{{tm-target-text}}`：和待翻译文本最佳匹配的翻译记忆目标文本（限制：需 memoQ 10.0+ 、需开启“Send best fuzzy TM”选项）
+- `{{source-text}}`：源文本（待翻译文本）
+- `{{target-text}}`：目标文本（已翻译文本） 
+
+限制（该限制仅针对目标文本）：需 memoQ 9.14+ 、需同意启用预览助手、无法在预翻译中使用。
 
 ---
 
-- `{{above-text}}`：待翻译文本的上文（可包括译文）（限制：需 memoQ 9.14+、需同意启用预览助手、无法在预翻译中使用）
-- `{{below-text}}`：待翻译文本的下文（可包括译文）（限制：需 memoQ 9.14+、需同意启用预览助手、无法在预翻译中使用）
+- `{{tm-source-text}}`：和待翻译文本最佳匹配的翻译记忆源文本
+- `{{tm-target-text}}`：和待翻译文本最佳匹配的翻译记忆目标文本
+
+限制：需 memoQ 10.0+ 、需开启“Send best fuzzy TM”选项
 
 ---
 
-- `{{summary-text}}`：全文摘要（不包括译文）（限制：需 memoQ 9.14+ 、需同意启用预览助手）
+- `{{above-text}}`：待翻译文本的上文（可包括译文）
+- `{{below-text}}`：待翻译文本的下文（可包括译文）
 
-- `{{full-text}}`：全文文本（不包括译文）（限制：需 memoQ 9.14+、需同意启用预览助手）
-
----
-
-- `{{glossary-text}}`：术语表（限制：需术语表文件的编码格式为 UTF-8）
+限制：需 memoQ 9.14+、需同意启用预览助手、无法在预翻译中使用
 
 ---
 
-### {{source-language}} 、{{target-language}}
+- `{{summary-text}}`：全文摘要（不包括译文）
+
+- `{{full-text}}`：全文文本（不包括译文）
+
+限制：需 memoQ 9.14+ 、需同意启用预览助手
+
+---
+
+- `{{glossary-text}}`：术语表
+
+限制：需术语表文件的编码格式为 UTF-8
+
+---
+
+### 8.1 {{source-language}} 、{{target-language}}
 
 （无特殊说明，略）
 
-### {{source-text}}、{{target-text}}
+### 8.2 {{source-text}}、{{target-text}}
 
 获取到的 target-text 不包含标签信息，所以不能在提示词中仅使用 target-text  来让 AI 润色译文，否则得到的结果会缺失原有标签。
 
 一种曲线救国的方式是把带标签的 source-text 和不带标签的 target-text 一起放入提示词，让 AI 润色译文的同时把 source-text 中的标签放入到译文适当位置。
 
-### {{tm-source-text}}、{{tm-target-text}}
+还有一种曲线救国的方式是新建一个干净的翻译记忆库，确认当前所有翻译以便将翻译保存到翻译记忆库中，然后使用 tm-target-text 代替 target-text 占位符。
+
+### 8.3 {{tm-source-text}}、{{tm-target-text}}
 
 翻译记忆指的是 memoQ 中的翻译记忆，而不是插件的翻译缓存，这两个占位符要求 memoQ 最低版本 10.0，且必须在 memoQ 机器翻译设置中开启以下选项：
 
 ![](https://raw.githubusercontent.com/JuchiaLu/Multi-Supplier-MT-Plugin/master/images/SendBestFuzzyTM.png)
 
-### {{above-text}}、{{below-text}}
+### 8.4 {{above-text}}、{{below-text}}
 
-选项：
+如果是普通用户，应优先考虑调整 memoQ 分段规则，使其产生更长的句段，这样自带上下文效果，便可以不携带上下文，达到节省 Token 的目的。
 
-- 如果 `包括源文本` 和 `包括目标文本` 两者都不选，将始终得到空白内容。
-- 如果 `最大句段数` 和 `最大字符数` 两者同时为 0，将始终得到空白内容。
-- 如果 `最大句段数` 或 `最大字符数` 两者其一为 0，零代表不限制其数量。
-- 如果 `最大句段数` 或 `最大字符数` 两者都不为 0，将同时限制两者数量。
+如果是翻译工作者，且不得不使用较短的分段规则，那么请根据实际情况调整携带的上下文句段数或字符数，以在翻译效果和消耗 Token 数之间平衡。
 
-建议：
+自定义这两个占位符的 `最大句段数` 和 `最大字符数` 选项时：设置为 0，代表不限制其数量，但为了防止意外附带全文，两者同时设置为 0 将得到空内容。
 
-- 如果是普通用户，应优先考虑调整 memoQ 分段规则，使其产生更长的句段，这样自带上下文效果，便可以不携带上下文，达到节省 Token 的目的。
-
-- 如果是翻译工作者，且不得不使用较短的分段规则，那么请根据实际情况调整携带的上下文句段数或字符数，以在翻译效果和消耗 Token 数之间平衡。
-
-### {{summary-text}}、{{full-text}}
-
-请谨慎使用 `{{full-text}}` 占位符，它会在请求中附带全文文本，消耗您大量的 Token。
-
- 
+### 8.5 {{summary-text}}、{{full-text}} 
 
 `{{summary-text}}` 的实际内容可以手动指定，此时它将对全部的文档生效，也可由大语言模型自动生成，此时每个文档都有自己的摘要。
 
 摘要只会自动生成一次，然后保存到文件缓存中，之后每次从缓存中读取，除非将文档从 memoQ 删除后重新导入或手动删除缓存文件，否则不会重新生成。
 
-摘要缓存文件保存在 `%appdata%/MemoQ/Plugins/MultiSupplierMTPlugin/Cache/Summary` 目录下，以 `[summary]-[文档原始文件名]-[文档的 GUID].txt` 命名，比如 `[summary]-[我的文档.doc]-[1ee7154a-47b7-4e82-bc48-f99b3728f233].txt`，你可以检查并修正自动生成的摘要内容。
+缓存文件保存在 `%appdata%/MemoQ/Plugins/MultiSupplierMTPlugin/Cache/Summary` 目录下，以 `[summary]-[文档原始文件名]-[文档的 GUID].txt` 命名，比如 `[summary]-[我的文档.doc]-[1ee7154a-47b7-4e82-bc48-f99b3728f233].txt`，你可以检查并修正自动生成的摘要内容。
 
-### {{glossary-text}}
+`{{full-text}}` 占位符一般只用在自动生成摘要的提示词中，请谨慎使用在翻译时的系统或用户提示词中，它会在请求中附带全文文本，消耗您大量的 Token。
+
+### 8.6 {{glossary-text}}
 
 将术语储存为 UTF-8 编码的 CSV 或 TXT 文件，默认的列名和顺序如下：
 
@@ -246,7 +245,7 @@ Hello     , 你好       , eng           , zho-CN
 World     , 世界       , eng           , zho-CN
 ```
 
-默认的分隔符为“英文半角逗号”，语言代码使用的是 memoQ 指定的 3 字母代码，具体请参考：[memoQ 3-letter code](https://docs.memoq.com/current/en/Concepts/concepts-supported-languages.html)。
+默认的分隔符为“英文半角逗号”，语言代码使用的是 memoQ 指定的[ 3 字母代码](https://docs.memoq.com/current/en/Concepts/concepts-supported-languages.html)。
 
 
 
@@ -261,44 +260,35 @@ World     , 世界       , eng           , zho-CN
 
 语言列的作用是限制术语条目的获取，比如一个术语文件中有多种语言的术语对，如果没有语言列，最终结果中将包含所有语言的术语对。
 
+**插件 v1.4.1 实现了”智能术语表“功能，请求中只会携带当前句段包含的术语，而不像之前携带全部的术语，因此你的术语表可以非常的大。**
+
 当术语文件读取失败或任一行数据解析出错，插件将终止该次翻译以防止产生非预期翻译结果，你可以在日志中查看错误信息并修正错误。
 
 
 
 注：memoQ 在中文环境下会自动将输入法设为全角状态，如果要修改分隔符且术语文件使用的分隔符不是全角，请先手动调回半角状态。
 
-### 占位符的特殊语法说明
+### 8.7 占位符的特殊语法说明
 
-- 当希望占位符实际内容为空时，终止本次翻译请求，可以在占位符名字后面加上 `!`，比如 `{{glossary-text!}}`、`{{summary-text!}}`。
+当希望占位符实际内容为空时，终止本次翻译请求，可以在占位符名字后面加上 `!`，比如 `{{summary-text!}}`、`{{full-text!}}`。
 
-- 当希望占位符实际内容为空时，把与占位符相关的引导词也替换成空，可以在占位符前面或后面加上`[]`，然后将引导词写在`[]` 内。
+当希望占位符实际内容为空时，把与占位符相关的引导词也替换成空，可以在占位符前面或后面加上`[]`，然后将引导词写在`[]` 内。
 
-### 占位符和特殊语法案例
+### 8.8 占位符和特殊语法案例
 
-系统提示词：
+用户提示词：
 
 ````
-这是供翻译参考的术语表：
-术语表开始
-{{glossary-text!}}
-术语表结束
-
 这是供翻译参考的全文摘要：
 摘要开始
 {{summary-text!}}
 摘要结束
 
-这是供翻译参考的全文文本：
-全文开始
-{{full-text!}}
-全文结束
-````
+[这是供翻译参考的术语表：
+术语表开始
+]{{glossary-text}}[
+术语表结束]
 
-
-
-用户提示词：
-
-````
 [这是供翻译参考的位于待翻译文本之前的上文：
 上文开始
 ]{{above-text}}[
@@ -321,13 +311,13 @@ World     , 世界       , eng           , zho-CN
 
 
 
-我们希望 glossary-text、summary-text、full-text、source-text 等内容为空时，终止翻译请求，所以在其后面加了 `!`，表示禁止内容为空。
+我们希望使用提示词缓存功能，所以优先将每次请求时值都不会动态改变的 `{{summary-text!}}` 放置到提示词的靠前位置。
 
-我们希望 above-text、below-text、tm-source-text、tm-target-text 内容为空时，将和它们相关的“引导词”也替换成空，所以使用了 `[]` 语法。
+我们希望 `{{summary-text!}}`、`{{source-text!}}` 等内容为空时，终止翻译请求，所以在其后面加了 `!`，表示禁止内容为空。
 
-比如 `{{below-text}}` 内容为空时，它前面的引导词 `[这是供翻译参考的位于待翻译文本之前的下文：下文开始]` 和后面的引导词 `[下文结束]` 也会被替换成空。
+我们希望 `{{glossary-text}}`、`{{above-text}}`、`{{tm-source-text}}` 等内容为空时，将和它们相关的“引导词”也替换成空，所以使用了 `[]` 语法。比如 `{{glossary-text}}` 内容为空时，它前面的引导词 `[这是供翻译参考的术语表：术语表开始]` 和后面的引导词 `[术语表结束]` 也会被替换成空。
 
-### 为什么要启用预览助手
+### 8.9 为什么要启用预览助手
 
 官方“机器翻译 SDK ”不提供获取译文、上下文、全文的能力，当在 memoQ 界面中点击某句段时，只能获取到被点击的单个句段原文，当使用预翻译执行批量翻译时，默认每次只能获取到 10 个句段的原文。
 
@@ -341,7 +331,7 @@ World     , 世界       , eng           , zho-CN
 
 由于插件需要知道某句段的索引才能获取它的译文、上下文，遗憾的是就算使用“预览工具 SDK ”，也只有在 memoQ 界面中点击某句段时才能获取到索引，使用预翻译进行批量翻译时，没有界面点击交互，无法获取到正在翻译句段的索引，所以无法获取到该句段的译文、上下文。
 
-## 支持的传统翻译提供商
+## 9. 支持的传统翻译提供商
 
 | 提供商                                                       | 免费额度                                             | QPS 限速                  | 批量翻译支持 | Xml 或 Html 支持 |
 | ------------------------------------------------------------ | ---------------------------------------------------- | ------------------------- | ------------ | ---------------- |
@@ -368,7 +358,7 @@ World     , 世界       , eng           , zho-CN
 
 注：百度翻译声称支持批量翻译，但他使用换行符来区分各个独立句段，但 memoQ  提供的一个句段是可能包含换行符的，所以把它当作不支持批量翻译处理。
 
-## 支持的大语言模型提供商
+## 10. 支持的大语言模型提供商
 
 | 提供商                                                       | 免费额度 | QPS 限速 | 批量翻译支持 | Xml 或 Html 支持 |
 | ------------------------------------------------------------ | -------- | -------- | ------------ | ---------------- |
@@ -410,4 +400,3 @@ World     , 世界       , eng           , zho-CN
 | [LM Studio](https://lmstudio.ai/docs/app/api/endpoints/openai) | ？       | ？       | ✔            | ✔(Xml 或 Html)   |
 
 注：以上只列出部分常用的服务提供商，插件还支持包括自研厂商、在线聚合网关、自建聚合网关、本地大模型在内的近百家几乎所有主流大语言模型提供商。
-
