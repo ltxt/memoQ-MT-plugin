@@ -32,8 +32,7 @@ namespace MultiSupplierMTPlugin.Helpers
             var result = new HashSet<KeyValuePair<string, string>>();
 
             var automata = GetOrCreateAutomata(path, srcLang, tgtLang, delimiter, charset, enableCache);
-
-            automata.ParseText(string.Join("", plainTexts), (hit) => result.Add(hit.Value));
+            automata.ParseText(string.Join("", plainTexts), (hit) => { result.Add(hit.Value); });
 
             return result;
         }
