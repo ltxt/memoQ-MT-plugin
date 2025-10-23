@@ -31,7 +31,7 @@ namespace MultiSupplierMTPlugin.Helpers
         {
             var result = new HashSet<KeyValuePair<string, string>>();
 
-            var automata = GetOrCreateAutomata(path, srcLang, tgtLang, delimiter, charset, enableCache);
+            var automata = GetOrCreateAutomata(path, srcLang, tgtLang, delimiter, charset, enableCache);                       
             automata.ParseText(string.Join("", plainTexts), (hit) => { result.Add(hit.Value); });
 
             return result;
@@ -108,27 +108,29 @@ namespace MultiSupplierMTPlugin.Helpers
                 // 第一行
                 string[] firstLineFields = parser.ReadFields();
 
-                // 尝试将第一行当作表头
-                if (firstLineFields.Contains(_SOURCE_TERM_FIELD) && firstLineFields.Contains(_TARGET_TERM_FIELD))
+                // 尝试将第一行当作表头（忽略大小写）
+                for (int i = 0; i < firstLineFields.Length; i++)
                 {
-                    for (int i = 0; i < firstLineFields.Length; i++)
-                    {
-                        string field = firstLineFields[i];
-                        if (field.Equals(_SOURCE_TERM_FIELD) || field.Equals(_TARGET_TERM_FIELD) || field.Equals(_SOURCE_LANGUAGE_FIELD) || field.Equals(_TARGET_LANGUAGE_FIELD))
-                        {
-                            fieldIndices[field] = i;
-                        }
-                    }
+                    string field = firstLineFields[i];
+
+                    if (field.Equals(_SOURCE_TERM_FIELD, StringComparison.OrdinalIgnoreCase))
+                        fieldIndices[_SOURCE_TERM_FIELD] = i;
+                    else if (field.Equals(_TARGET_TERM_FIELD, StringComparison.OrdinalIgnoreCase))
+                        fieldIndices[_TARGET_TERM_FIELD] = i;
+                    else if (field.Equals(_SOURCE_LANGUAGE_FIELD, StringComparison.OrdinalIgnoreCase))
+                        fieldIndices[_SOURCE_LANGUAGE_FIELD] = i;
+                    else if (field.Equals(_TARGET_LANGUAGE_FIELD, StringComparison.OrdinalIgnoreCase))
+                        fieldIndices[_TARGET_LANGUAGE_FIELD] = i;
                 }
-                else
-                {
-                    // 第一行不是表头，使用默认表头
+
+                // 第一行不是表头，使用默认表头，并将第一行当作数据行处理
+                if (!fieldIndices.ContainsKey(_SOURCE_TERM_FIELD) || !fieldIndices.ContainsKey(_TARGET_TERM_FIELD))
+                {                    
                     fieldIndices[_SOURCE_TERM_FIELD] = 0;
                     fieldIndices[_TARGET_TERM_FIELD] = 1;
                     fieldIndices[_SOURCE_LANGUAGE_FIELD] = 2;
                     fieldIndices[_TARGET_LANGUAGE_FIELD] = 3;
-
-                    // 第一行当作数据处理
+                    
                     if (TryGetTermPair(firstLineFields, fieldIndices, srcLang, tgtLang, out var termPair))
                     {
                         result.Add(termPair);
@@ -162,13 +164,13 @@ namespace MultiSupplierMTPlugin.Helpers
                 if (fieldIndices.ContainsKey(_SOURCE_LANGUAGE_FIELD) && fieldIndices[_SOURCE_LANGUAGE_FIELD] < fields.Length)
                 {
                     string sourceLanguage = fields[fieldIndices[_SOURCE_LANGUAGE_FIELD]];
-                    includeTerms = string.IsNullOrWhiteSpace(sourceLanguage) || srcLang.Equals(sourceLanguage);
+                    includeTerms = string.IsNullOrWhiteSpace(sourceLanguage) || srcLang.Equals(sourceLanguage, StringComparison.OrdinalIgnoreCase);
                 }
 
                 if (includeTerms && fieldIndices.ContainsKey(_TARGET_LANGUAGE_FIELD) && fieldIndices[_TARGET_LANGUAGE_FIELD] < fields.Length)
                 {
                     string targetLanguage = fields[fieldIndices[_TARGET_LANGUAGE_FIELD]];
-                    includeTerms = string.IsNullOrWhiteSpace(targetLanguage) || tgtLang.Equals(targetLanguage);
+                    includeTerms = string.IsNullOrWhiteSpace(targetLanguage) || tgtLang.Equals(targetLanguage, StringComparison.OrdinalIgnoreCase);
                 }
 
                 if (includeTerms)
